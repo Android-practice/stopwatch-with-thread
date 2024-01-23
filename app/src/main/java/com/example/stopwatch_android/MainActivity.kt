@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
         tv_millisecond = findViewById(R.id.tv_millisecond)
 
         //버튼에 리스너 설정
-        btn_start.setOnClickListener(this) // this means 방금 구현한 "OnClickListener"를 버튼과 연동 
+        btn_start.setOnClickListener(this) // this means 방금 구현한 "OnClickListener"를 버튼과 연동
         btn_refresh.setOnClickListener(this)
 
 
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
 
 
         //kotlin 제공 timer함수 : 일정한 주기로 반복되는 동작을 수행할 경우
-        //항상 백그라운드 스레드에서 실행된다
+        //항상 백그라운드 스레드에서 실행된다 -> 백그라운드 스레드에서는 뷰를 변경할 수 없음!
         timer = timer(period = 10) {
             //1000ms = 1s
             //즉, 0.01초마다 time++
@@ -77,9 +77,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
             val minute = time / 6000
 
 
-            tv_millisecond.text = if(milli_second < 10) ".0${milli_second}" else ".${milli_second}"
-            tv_second.text = if(second< 10) ":${second}" else ":${second}"
-            tv_minute.text = "${minute}"
+            //main thread에서 처리하도록 
+            runOnUiThread {
+                tv_millisecond.text = if(milli_second < 10) ".0${milli_second}" else ".${milli_second}"
+                tv_second.text = if(second< 10) ":${second}" else ":${second}"
+                tv_minute.text = "${minute}"
+            }
+
         }
     }
 
