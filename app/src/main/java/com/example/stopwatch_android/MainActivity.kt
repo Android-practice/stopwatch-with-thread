@@ -79,9 +79,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
 
             //main thread에서 처리하도록
             runOnUiThread {
-                tv_millisecond.text = if(milli_second < 10) ".0${milli_second}" else ".${milli_second}"
-                tv_second.text = if(second< 10) ":0${second}" else ":${second}"
-                tv_minute.text = "${minute}"
+                //refresh의 뷰 변경과 start-runOnUiThread내의 뷰 변경이 동시에 일어날 수 있으니 작동시에만 변경되도록 처리
+                if(isRunning){
+                    tv_millisecond.text = if(milli_second < 10) ".0${milli_second}" else ".${milli_second}"
+                    tv_second.text = if(second< 10) ":0${second}" else ":${second}"
+                    tv_minute.text = "${minute}"
+                }
             }
 
         }
