@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import java.util.Timer
+import kotlin.concurrent.timer
 
 class MainActivity : AppCompatActivity(), View.OnClickListener{
 
@@ -16,15 +18,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
     private lateinit var tv_millisecond : TextView
 
     private var isRunning = false
+
+    private var timer : Timer? = null
+
+    private var time = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //변수 초기화
         btn_start = findViewById(R.id.btn_start)
         btn_refresh = findViewById(R.id.btn_refresh)
         tv_minute = findViewById(R.id.tv_minute)
         tv_second = findViewById(R.id.tv_second)
         tv_millisecond = findViewById(R.id.tv_millisecond)
+
+        //버튼에 리스너 설정
+        btn_start.setOnClickListener(this) // this means 방금 구현한 "OnClickListener"를 버튼과 연동 
+        btn_refresh.setOnClickListener(this)
+
+
     }
 
     //onclicklistener 필수로 구현되어야 하는 메소드
@@ -47,7 +61,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
 
     //시작
     fun start(){
+        btn_start.text = getString(R.string.btn_pause)
+        btn_start.setBackgroundColor(getColor(R.color.btn_pause))
 
+
+        //kotlin 제공 timer함수 : 일정한 주기로 반복되는 동작을 수행할 경우
+        //항상 백그라운드 스레드에서 실행된다
+        timer = timer(period = 10) {
+            //1000ms = 1s
+            //즉, 0.01초마다 time++
+            time++
+
+            val milli_second = time % 100
+            val second = (time % 6000) / 100
+            val minute = time / 6000
+
+
+            tv_millisecond.text = if(milli_second < 10) ".0${milli_second}" else ".${milli_second}"
+            tv_second.text = if(second< 10) ":${second}" else ":${second}"
+            tv_minute.text = "${minute}"
+        }
     }
 
     //잠시멈춤
