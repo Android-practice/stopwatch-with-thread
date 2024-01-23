@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
     fun start(){
         btn_start.text = getString(R.string.btn_pause)
         btn_start.setBackgroundColor(getColor(R.color.btn_pause))
-
+        isRunning = true
 
         //kotlin 제공 timer함수 : 일정한 주기로 반복되는 동작을 수행할 경우
         //항상 백그라운드 스레드에서 실행된다 -> 백그라운드 스레드에서는 뷰를 변경할 수 없음!
@@ -77,10 +77,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
             val minute = time / 6000
 
 
-            //main thread에서 처리하도록 
+            //main thread에서 처리하도록
             runOnUiThread {
                 tv_millisecond.text = if(milli_second < 10) ".0${milli_second}" else ".${milli_second}"
-                tv_second.text = if(second< 10) ":${second}" else ":${second}"
+                tv_second.text = if(second< 10) ":0${second}" else ":${second}"
                 tv_minute.text = "${minute}"
             }
 
@@ -90,6 +90,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
     //잠시멈춤
     fun pause(){
 
+        btn_start.text = getString(R.string.btn_start)
+        btn_start.setBackgroundColor(getColor(R.color.btn_start))
+
+        isRunning = false
+        timer?.cancel()
     }
 
     //초기화
