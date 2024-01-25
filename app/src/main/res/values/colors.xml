@@ -5,4 +5,7 @@
     <color name="btn_start">#81E17A</color>
     <color name="btn_restart">#929EFF</color>
     <color name="btn_pause">#FF8B8B</color>
+    
+    //디자인 업그레이드
+    <color name="blue">#0059FF</color>
 </resources>
